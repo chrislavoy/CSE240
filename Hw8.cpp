@@ -132,7 +132,7 @@ void printFirst(container* root)
 
 int insertion(container** pointerToHead)
 {
-	
+
 	container* newNode = new container();
 	container* iterator = NULL;
 	container* follower = NULL;
@@ -197,14 +197,31 @@ int insertion(container** pointerToHead)
 
 person* search(container* root, char* sname)
 {
-	return NULL;
+	container* iterator = root;
+
+	while (iterator != NULL)
+	{
+		if (strcmp(sname, iterator->plink->name) == 0)
+		{
+			printf("\n\nname = %s\n", iterator->plink->name);
+			printf("email = %s\n", iterator->plink->email);
+			printf("phone = %d\n", iterator->plink->phone);
+			
+			free(sname); // garbage collection
+			return iterator->plink;
+		}
+		iterator = iterator->next;
+	}
+	printf("The name does not exist.\n");
+	free(sname); // garbage collection
+	return iterator->plink;
 }
 
-void deleteNode(container* node)
-{
-	delete node->plink;
-	delete node;
-	node = NULL;
+void deleteNode(container** node)
+{	
+	free((*node)->plink);
+	free(*node);
+	*node = NULL;	
 }
 
 void deleteAll(container** pointerToHead)
@@ -216,7 +233,7 @@ void deleteAll(container** pointerToHead)
 	else
 	{
 		deleteAll(&(*pointerToHead)->next);
-		deleteNode(*pointerToHead);
+		deleteNode(&(*pointerToHead));
 	}
 }
 
@@ -224,14 +241,17 @@ void printAll(container *root)
 {
 	container* iterator = root;
 
-	if (iterator->next == NULL)
+	if (root != NULL)
 	{
-		printFirst(iterator);
-		return;
-	}
-	else
-	{
-		printFirst(iterator);
-		printAll(iterator->next);
+		if (iterator->next == NULL)
+		{
+			printFirst(iterator);
+			return;
+		}
+		else
+		{
+			printFirst(iterator);
+			printAll(iterator->next);
+		}
 	}
 }
